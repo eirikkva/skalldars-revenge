@@ -1,0 +1,13 @@
+[Unit]
+Description=docker boot
+After=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ec2-user
+ExecStart=/usr/bin/docker start openra
+
+[Install]
+WantedBy=multi-user.target
