@@ -16,27 +16,27 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('help'):
-        await message.channel.send('Yuri Skallagrimson can start openra server for you! "start", "stop" and "state" is my commands. ')
+    if message.content.lower().startswith('help'):
+        await message.channel.send('I am Yuri Skallagrimson! \n Available commands: "start", "stop" "state" and "help"')
 
     # Find the EC2 instance with a tag that corresponds to the guild id (discord server)
     instances = list(ec2.instances.filter(Filters=[{'Name':'tag:guild', 'Values': [str(message.channel.guild.id)]}]))
     print('Found guild id math on ' + str(instances[0]) + ' (' + str(len(instances)) + ' matching instances)')
     instance = instances[0]
 
-    if message.content.startswith('start'):
+    if message.content.lower().startswith('start'):
         if startInstance(instance):
-            await message.channel.send('I will start {0} with Password: {1} '.format(os.getenv('OPENRA_NAME'),os.getenv('OPENRA_PASSWORD')))
+            await message.channel.send('I will start {0} with Password: {1} \n Use "state" to verify. '.format(os.getenv('OPENRA_NAME'),os.getenv('OPENRA_PASSWORD')))
         else:
             await message.channel.send('Crrritical error - Yuri could not start {0}'.format(os.getenv('OPENRA_NAME')))
 
-    if message.content.startswith('stop'):
+    if message.content.lower().startswith('stop'):
         if shutDownInstance(instance):
-            await message.channel.send('I will shut down {0} comrad!'.format(os.getenv('OPENRA_NAME')))
+            await message.channel.send('You want to stop {0}!??!? Okay,okay I stop'.format(os.getenv('OPENRA_NAME')))
         else:
             await message.channel.send('Something is wrong, I have problems shutting down {0}'.format(os.getenv('OPENRA_NAME')))
 
-    if message.content.startswith('state'):
+    if message.content.lower().startswith('state'):
          await message.channel.send('{0} is: {1}'.format(os.getenv('OPENRA_NAME'), getInstanceState(instance)))
 
 def shutDownInstance(instance):
@@ -69,7 +69,7 @@ def getPortState(ip, port):
     if ready == 0:
         return 'ready at ' + ip 
     else:
-        return 'starting, please wait'
+        return 'starting, please wait or I put you in Gulag'
 
 
 client.run(os.getenv('DISCORD_TOKEN'))
